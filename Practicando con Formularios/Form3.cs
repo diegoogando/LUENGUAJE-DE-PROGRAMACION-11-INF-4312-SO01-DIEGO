@@ -19,8 +19,13 @@ namespace Practicando_con_Formularios
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
+
             label1.Text = "Texto cambiado";
+        }
+
+        private void Form3_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

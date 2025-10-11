@@ -49,6 +49,7 @@
             Controls.Add(comboBox1);
             Name = "Form7";
             Text = "Form7";
+            Load += Form7_Load;
             ResumeLayout(false);
         }
 

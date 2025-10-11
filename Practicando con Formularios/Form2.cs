@@ -21,5 +21,10 @@ namespace Practicando_con_Formularios
         {
 
         }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

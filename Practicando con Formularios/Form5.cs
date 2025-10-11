@@ -21,7 +21,12 @@ namespace Practicando_con_Formularios
         {
             double n1 = Convert.ToDouble(textBox1.Text);
             double n2 = Convert.ToDouble(textBox2.Text);
-           label1.Text = "RESULTADO:" + (n1 + n2);
+            label1.Text = "RESULTADO:" + (n1 + n2);
+        }
+
+        private void Form5_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -23,5 +23,10 @@ namespace Practicando_con_Formularios
             else if (radioButton2.Checked) label1.Text = "Seleccionaste: " + radioButton2.Text;
             else if (radioButton3.Checked) label1.Text = "Seleccionaste: " + radioButton3.Text;
         }
+
+        private void Form6_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

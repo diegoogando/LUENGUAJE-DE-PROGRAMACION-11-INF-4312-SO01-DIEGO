@@ -21,5 +21,10 @@ namespace Practicando_con_Formularios
         {
             label1.Text = textBox1.Text;
         }
+
+        private void Form4_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -21,10 +21,15 @@ namespace Practicando_con_Formularios
         {
             switch (comboBox1.Text)
             {
-                case "Rojo": this.BackColor = Color.Red; break;
-                case "Verde": this.BackColor = Color.Green; break;
-                case "Azul": this.BackColor = Color.Blue; break;
+                case "rojo": this.BackColor = Color.Red; break;
+                case "verde": this.BackColor = Color.Green; break;
+                case "azul": this.BackColor = Color.Blue; break;
             }
+        }
+
+        private void Form7_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

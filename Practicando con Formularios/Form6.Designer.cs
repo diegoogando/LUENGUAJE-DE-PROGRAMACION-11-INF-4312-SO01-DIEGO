@@ -99,6 +99,7 @@
             Controls.Add(radioButton1);
             Name = "Form6";
             Text = "Form6";
+            Load += Form6_Load;
             ResumeLayout(false);
             PerformLayout();
         }
