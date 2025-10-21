@@ -21,5 +21,10 @@ namespace Practicando_con_Formularios
         {
             MessageBox.Show("Hola, soy Diego Ogando Montero - SD-2024-00770");
         }
+
+        private void Form11_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

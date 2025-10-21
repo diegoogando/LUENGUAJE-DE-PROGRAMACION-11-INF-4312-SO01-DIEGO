@@ -32,5 +32,10 @@ namespace Practicando_con_Formularios
                 File.WriteAllText(saveFileDialog1.FileName, textBox1.Text);
             }
         }
+
+        private void Form16_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

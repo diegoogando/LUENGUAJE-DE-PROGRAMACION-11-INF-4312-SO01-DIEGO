@@ -69,6 +69,7 @@
             Controls.Add(dateTimePicker1);
             Name = "Form12";
             Text = "Form12";
+            Load += Form12_Load;
             ResumeLayout(false);
             PerformLayout();
         }

@@ -26,5 +26,10 @@ namespace Practicando_con_Formularios
         {
 
         }
+
+        private void tabPage1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

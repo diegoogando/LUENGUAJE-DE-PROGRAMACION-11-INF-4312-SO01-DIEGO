@@ -76,6 +76,7 @@
             Controls.Add(textBox1);
             Name = "Form16";
             Text = "Form16";
+            Load += Form16_Load;
             ResumeLayout(false);
             PerformLayout();
         }

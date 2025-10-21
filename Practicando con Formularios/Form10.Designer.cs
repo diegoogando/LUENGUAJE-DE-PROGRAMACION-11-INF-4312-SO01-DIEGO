@@ -58,6 +58,7 @@
             Controls.Add(textBox1);
             Name = "Form10";
             Text = "Form10";
+            Load += Form10_Load;
             ResumeLayout(false);
             PerformLayout();
         }

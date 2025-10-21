@@ -28,5 +28,10 @@ namespace Practicando_con_Formularios
                 MessageBox.Show("Error: No es un número.");
             }
         }
+
+        private void Form10_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

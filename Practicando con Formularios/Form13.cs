@@ -23,5 +23,10 @@ namespace Practicando_con_Formularios
             double fahrenheit = (celsius * 9 / 5) + 32;
             label1.Text = $"{celsius}°C = {fahrenheit}°F";
         }
+
+        private void Form13_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

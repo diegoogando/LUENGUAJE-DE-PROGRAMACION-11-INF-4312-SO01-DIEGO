@@ -24,5 +24,10 @@ namespace Practicando_con_Formularios
             label1.Text = "Clis: " + contador;
 
         }
+
+        private void Form9_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

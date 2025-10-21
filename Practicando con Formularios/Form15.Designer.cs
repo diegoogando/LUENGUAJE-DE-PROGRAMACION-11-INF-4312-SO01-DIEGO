@@ -30,11 +30,11 @@
         {
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
+            label1 = new Label();
             tabPage2 = new TabPage();
+            label2 = new Label();
             dataGridView1 = new DataGridView();
             tabPage3 = new TabPage();
-            label1 = new Label();
-            label2 = new Label();
             label3 = new Label();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
@@ -64,6 +64,16 @@
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Tab 1: “Primera pestaña”";
             tabPage1.UseVisualStyleBackColor = true;
+            tabPage1.Click += tabPage1_Click;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(154, 110);
+            label1.Name = "label1";
+            label1.Size = new Size(95, 15);
+            label1.TabIndex = 0;
+            label1.Text = " Primera pestaña";
             // 
             // tabPage2
             // 
@@ -75,6 +85,15 @@
             tabPage2.Size = new Size(619, 292);
             tabPage2.TabIndex = 1;
             tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(415, 165);
+            label2.Name = "label2";
+            label2.Size = new Size(97, 15);
+            label2.TabIndex = 1;
+            label2.Text = "Segunda pestaña";
             // 
             // dataGridView1
             // 
@@ -94,24 +113,6 @@
             tabPage3.TabIndex = 2;
             tabPage3.Text = "tabPage3";
             tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(154, 110);
-            label1.Name = "label1";
-            label1.Size = new Size(95, 15);
-            label1.TabIndex = 0;
-            label1.Text = " Primera pestaña";
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(415, 165);
-            label2.Name = "label2";
-            label2.Size = new Size(97, 15);
-            label2.TabIndex = 1;
-            label2.Text = "Segunda pestaña";
             // 
             // label3
             // 

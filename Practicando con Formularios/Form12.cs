@@ -21,5 +21,10 @@ namespace Practicando_con_Formularios
         {
             label1.Text = "Fecha seleccionada: " + dateTimePicker1.Value.ToShortDateString();
         }
+
+        private void Form12_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

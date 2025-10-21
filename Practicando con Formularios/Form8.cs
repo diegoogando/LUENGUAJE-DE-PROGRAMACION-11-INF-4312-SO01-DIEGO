@@ -19,8 +19,13 @@ namespace Practicando_con_Formularios
 
         private void button1_Click(object sender, EventArgs e)
         {
-            listBox1.Items.Add(textBox1.Text);  
+            listBox1.Items.Add(textBox1.Text);
             textBox1.Clear();
+        }
+
+        private void Form8_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

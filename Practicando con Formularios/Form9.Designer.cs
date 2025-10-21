@@ -60,6 +60,7 @@
             Controls.Add(button1);
             Name = "Form9";
             Text = "Form9";
+            Load += Form9_Load;
             ResumeLayout(false);
             PerformLayout();
         }
