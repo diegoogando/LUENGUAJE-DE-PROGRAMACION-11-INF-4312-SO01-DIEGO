@@ -1,40 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
+﻿using ManipulacionDeDatosApp.Models;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.Versioning;
 using System.Windows.Forms;
 
 namespace ManipulacionDeDatosApp
 {
+    [SupportedOSPlatform("windows")]
     public partial class FrmCategorias : Form
     {
+        private readonly PracticaBDContext _context;
+
         public FrmCategorias()
         {
             InitializeComponent();
+            _context = new PracticaBDContext();
         }
 
         private void btnCargar_Click(object sender, EventArgs e)
         {
-            using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-KC4QIBA;Initial Catalog=PracticaBD;Integrated Security=True;"))
-            {
-                connection.Open();
-                string queryClientes = "SELECT * FROM Categorias;";
-
-                using (SqlCommand cmd = new SqlCommand(queryClientes, connection))
-                using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
-                {
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
-
-                    dgCategorias.DataSource = dt;
-                }
-            }
-
+            var categorias = _context.Categorias.ToList();
+            dgCategorias.DataSource = categorias;
         }
 
         private void btnActualizar_Click(object sender, EventArgs e)
@@ -49,29 +35,28 @@ namespace ManipulacionDeDatosApp
                 MessageBox.Show("Por favor, complete el Nombre.");
                 return;
             }
-            using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-KC4QIBA;Initial Catalog=PracticaBD;Integrated Security=True;"))
+
+            if (!int.TryParse(txtId2.Text, out int id))
             {
-                connection.Open();
-                string updateQuery = "UPDATE Categorias SET NombreCategoria = @NombreCategoria WHERE CategoriaID = @CategoriaID;";
-                using (SqlCommand cmd = new SqlCommand(updateQuery, connection))
-                {
-                    cmd.Parameters.AddWithValue("@CategoriaID", txtId2.Text);
-                    cmd.Parameters.AddWithValue("@NombreCategoria", txtNombre2.Text);
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                    if (rowsAffected > 0)
-                    {
-                        MessageBox.Show("Categoría actualizada exitosamente.");
-                        // Limpiar los campos después de actualizar
-                        txtId2.Text = "";
-                        txtNombre2.Text = "";
-                        // Recargar los datos en el DataGridView
-                        btnCargar_Click(sender, e);
-                    }
-                    else
-                    {
-                        MessageBox.Show("No se encontró una categoría con ese CategoriaID.");
-                    }
-                }
+                MessageBox.Show("Por favor, ingrese un ID de categoría válido.");
+                return;
+            }
+
+            var categoria = _context.Categorias.Find(id);
+            if (categoria != null)
+            {
+                categoria.NombreCategoria = txtNombre2.Text;
+                _context.SaveChanges();
+                MessageBox.Show("Categoría actualizada exitosamente.");
+                // Limpiar los campos después de actualizar
+                txtId2.Text = "";
+                txtNombre2.Text = "";
+                // Recargar los datos en el DataGridView
+                btnCargar_Click(sender, e);
+            }
+            else
+            {
+                MessageBox.Show("No se encontró una categoría con ese CategoriaID.");
             }
         }
 
@@ -82,76 +67,78 @@ namespace ManipulacionDeDatosApp
                 MessageBox.Show("Por favor, ingrese la CategoriasID a eliminar.");
                 return;
             }
-            using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-KC4QIBA;Initial Catalog=PracticaBD;Integrated Security=True;"))
+
+            if (!int.TryParse(txtId3.Text, out int id))
             {
-                connection.Open();
-                string deleteQuery = "DELETE FROM Categorias WHERE CategoriaID = @CategoriaID;";
-                using (SqlCommand cmd = new SqlCommand(deleteQuery, connection))
-                {
-                    cmd.Parameters.AddWithValue("@CategoriaID", txtId3.Text);
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                    if (rowsAffected > 0)
-                    {
-                        MessageBox.Show("Categoría eliminada exitosamente.");
-                        // Limpiar el campo después de eliminar
-                        txtId3.Text = "";
-                        // Recargar los datos en el DataGridView
-                        btnCargar_Click(sender, e);
-                    }
-                    else
-                    {
-                        MessageBox.Show("No se encontró una categoría con ese CategoriaID.");
-                    }
-                }
-            }
-
-
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(txtNombre1.Text))
-            {
-                MessageBox.Show("Por favor, complete el Nombre.");
+                MessageBox.Show("Por favor, ingrese un ID de categoría válido.");
                 return;
             }
-
-            using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-KC4QIBA;Initial Catalog=PracticaBD;Integrated Security=True;"))
+            var categoria = _context.Categorias.Find(id);
+            if (categoria != null)
             {
-                connection.Open();
-
-                // Obtener el próximo CategoriaID
-                string maxIdQuery = "SELECT ISNULL(MAX(CategoriaID), 0) + 1 FROM Categorias;";
-                int nextId;
-                using (SqlCommand maxCmd = new SqlCommand(maxIdQuery, connection))
-                {
-                    nextId = (int)maxCmd.ExecuteScalar();
-                }
-
-                string insertQuery = "INSERT INTO Categorias (CategoriaID, NombreCategoria) VALUES (@CategoriaID, @NombreCategoria);";
-                using (SqlCommand cmd = new SqlCommand(insertQuery, connection))
-                {
-                    cmd.Parameters.AddWithValue("@CategoriaID", nextId);
-                    cmd.Parameters.AddWithValue("@NombreCategoria", txtNombre1.Text);
-                    cmd.ExecuteNonQuery();
-                    MessageBox.Show("Categoría agregada exitosamente.");
-                    // Limpiar el campo después de insertar
-                    txtNombre1.Text = "";
-                    // Recargar los datos en el DataGridView
-                    btnCargar_Click(sender, e);
-                }
+                _context.Categorias.Remove(categoria);
+                _context.SaveChanges();
+                MessageBox.Show("Categoría eliminada exitosamente.");
+                // Limpiar el campo después de eliminar
+                txtId3.Text = "";
+                // Recargar los datos en el DataGridView
+                btnCargar_Click(sender, e);
+            }
+            else
+            {
+                MessageBox.Show("No se encontró una categoría con ese CategoriaID.");
             }
         }
 
-        private void groupBox1_Enter(object sender, EventArgs e)
+       private void btnGuardar_Click(object sender, EventArgs e)
+{
+    if (string.IsNullOrWhiteSpace(txtNombre1.Text))
+    {
+        MessageBox.Show("Por favor, complete el Nombre.");
+        return;
+    }
+
+    try
+    {
+        // Calcular el siguiente ID disponible
+        int nextId = _context.Categorias.Any()
+            ? _context.Categorias.Max(c => c.CategoriaId) + 1
+            : 1;
+
+        // Crear la nueva categoría
+        var categoria = new Categoria
         {
+            CategoriaId = nextId,
+            NombreCategoria = txtNombre1.Text
+        };
 
-        }
+        // Agregar y guardar
+        _context.Categorias.Add(categoria);
+        _context.SaveChanges();
 
-        private void FrmCategorias_Load(object sender, EventArgs e)
-        {
+        MessageBox.Show("Categoría agregada exitosamente.");
 
-        }
+        // Limpiar el campo después de insertar
+        txtNombre1.Text = "";
+
+        // Recargar los datos en el DataGridView
+        btnCargar_Click(sender, e);
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show($"Ocurrió un error al guardar la categoría: {ex.Message}");
     }
 }
 
+        private void FrmCategorias_Load(object sender, EventArgs e)
+        {
+            btnCargar_Click(sender, e);
+        }
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            _context.Dispose();
+            base.OnFormClosed(e);
+        }
+    }
+}

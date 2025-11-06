@@ -1,3 +1,6 @@
+using System.Windows.Forms;
+using System.Drawing;
+
 namespace ManipulacionDeDatosApp
 {
     partial class FrmProductos
@@ -79,7 +82,7 @@ namespace ManipulacionDeDatosApp
             groupBox1.TabIndex = 3;
             groupBox1.TabStop = false;
             groupBox1.Text = "Insertar";
-            groupBox1.Enter += groupBox1_Enter;
+
             // 
             // label6
             // 
@@ -105,7 +108,7 @@ namespace ManipulacionDeDatosApp
             cbCategoria1.Name = "cbCategoria1";
             cbCategoria1.Size = new Size(150, 23);
             cbCategoria1.TabIndex = 6;
-            cbCategoria1.SelectedIndexChanged += cbCategoria1_SelectedIndexChanged;
+
             // 
             // label4
             // 
@@ -156,7 +159,7 @@ namespace ManipulacionDeDatosApp
             button2.TabIndex = 0;
             button2.Text = "Agregar";
             button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
+            button2.Click += btnGuardar_Click;
             // 
             // groupBox2
             // 
@@ -223,7 +226,7 @@ namespace ManipulacionDeDatosApp
             cbProveedor2.Name = "cbProveedor2";
             cbProveedor2.Size = new Size(150, 23);
             cbProveedor2.TabIndex = 16;
-            cbProveedor2.SelectedIndexChanged += cbProveedor2_SelectedIndexChanged;
+
             // 
             // cbCategoria2
             // 
@@ -241,7 +244,7 @@ namespace ManipulacionDeDatosApp
             label8.Size = new Size(61, 15);
             label8.TabIndex = 14;
             label8.Text = "Proveedor";
-            label8.Click += label8_Click;
+
             // 
             // label7
             // 
@@ -265,7 +268,7 @@ namespace ManipulacionDeDatosApp
             txtNombre2.Name = "txtNombre2";
             txtNombre2.Size = new Size(150, 23);
             txtNombre2.TabIndex = 11;
-            txtNombre2.TextChanged += txtNombre2_TextChanged;
+
             // 
             // txtId2
             // 

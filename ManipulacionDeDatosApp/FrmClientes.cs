@@ -1,127 +1,71 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.Versioning;
 using System.Windows.Forms;
-using System.Data.SqlClient;
+using ManipulacionDeDatosApp.Models;
 
 namespace ManipulacionDeDatosApp
 {
+    [SupportedOSPlatform("windows")]
     public partial class FrmClientes : Form
     {
+        private readonly PracticaBDContext _context;
+
         public FrmClientes()
         {
             InitializeComponent();
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox3_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox1_Enter(object sender, EventArgs e)
-        {
-
+            _context = new PracticaBDContext();
         }
 
         private void btnCargar_Click(object sender, EventArgs e)
         {
-            using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-KC4QIBA;Initial Catalog=PracticaBD;Integrated Security=True;"))
-            {
-                connection.Open();
-                string queryClientes = "SELECT * FROM Clientes;";
-
-                using (SqlCommand cmd = new SqlCommand(queryClientes, connection))
-                using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
-                {
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
-
-                    dgClientes.DataSource = dt;
-                }
-            }
-
+            var clientes = _context.Clientes.ToList();
+            dgClientes.DataSource = clientes;
         }
 
         private void FrmClientes_Load(object sender, EventArgs e)
         {
-
+            btnCargar_Click(sender, e);
         }
 
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtNombre.Text))
+            if (string.IsNullOrWhiteSpace(txtNombre.Text) ||
+                string.IsNullOrWhiteSpace(txtCorreo.Text) ||
+                string.IsNullOrWhiteSpace(txtTelefono.Text) ||
+                string.IsNullOrWhiteSpace(txtDireccion.Text))
             {
-                MessageBox.Show("Por favor, complete el Nombre.");
+                MessageBox.Show("Por favor, complete todos los campos.");
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(txtCorreo.Text))
+            // Calcular el siguiente ID disponible
+            int nextId = _context.Clientes.Any()
+                ? _context.Clientes.Max(c => c.ClienteId) + 1
+                : 1;
+
+            var cliente = new Cliente
             {
-                MessageBox.Show("Por favor, complete el Correo.");
-                return;
-            }
-            if (string.IsNullOrWhiteSpace(txtTelefono.Text))
-            {
-                MessageBox.Show("Por favor, complete el Teléfono.");
-                return;
-            }
-            if (string.IsNullOrWhiteSpace(txtDireccion.Text))
-            {
-                MessageBox.Show("Por favor, complete la Dirección.");
-                return;
-            }
+                ClienteId = nextId,
+                Nombre = txtNombre.Text,
+                Apellido = txtApellido.Text,
+                Email = txtCorreo.Text,
+                Telefono = txtTelefono.Text,
+                Direccion = txtDireccion.Text
+            };
 
-            using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-KC4QIBA;Initial Catalog=PracticaBD;Integrated Security=True;"))
-            {
-                connection.Open();
+            _context.Clientes.Add(cliente);
+            _context.SaveChanges();
 
-                // Obtener el próximo ID disponible
-                string maxIdQuery = "SELECT ISNULL(MAX(ClienteID), 0) + 1 FROM Clientes;";
-                int newId;
-                using (SqlCommand maxIdCmd = new SqlCommand(maxIdQuery, connection))
-                {
-                    newId = (int)maxIdCmd.ExecuteScalar();
-                }
-
-                string insertQuery = "INSERT INTO Clientes (ClienteID, NombreCompleto, CorreoElectronico, Telefono, Direccion) " +
-                    "VALUES (@ClienteID, @NombreCompleto, @CorreoElectronico, @Telefono, @Direccion);";
-
-                using (SqlCommand cmd = new SqlCommand(insertQuery, connection))
-                {
-                    cmd.Parameters.AddWithValue("@ClienteID", newId);
-                    cmd.Parameters.AddWithValue("@NombreCompleto", txtNombre.Text);
-                    cmd.Parameters.AddWithValue("@CorreoElectronico", txtCorreo.Text);
-                    cmd.Parameters.AddWithValue("@Telefono", txtTelefono.Text);
-                    cmd.Parameters.AddWithValue("@Direccion", txtDireccion.Text);
-
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                    if (rowsAffected > 0)
-                    {
-                        MessageBox.Show("Cliente guardado exitosamente.");
-                        // Limpiar los campos después de guardar
-                        txtNombre.Text = "";
-                        txtCorreo.Text = "";
-                        txtTelefono.Text = "";
-                        txtDireccion.Text = "";
-                        // Recargar los datos en el DataGridView
-                        btnCargar_Click(sender, e);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Error al guardar el cliente.");
-                    }
-                }
-            }
+            MessageBox.Show("Cliente guardado exitosamente.");
+            // Limpiar los campos después de guardar
+            txtNombre.Text = "";
+            txtApellido.Text = "";
+            txtCorreo.Text = "";
+            txtTelefono.Text = "";
+            txtDireccion.Text = "";
+            // Recargar los datos en el DataGridView
+            btnCargar_Click(sender, e);
         }
 
         private void btnEliminar_Click(object sender, EventArgs e)
@@ -131,89 +75,76 @@ namespace ManipulacionDeDatosApp
                 MessageBox.Show("Por favor, ingrese el ClienteID a eliminar.");
                 return;
             }
-            using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-KC4QIBA;Initial Catalog=PracticaBD;Integrated Security=True;"))
+
+            if (!int.TryParse(txtId.Text, out int id))
             {
-                connection.Open();
-                string deleteQuery = "DELETE FROM Clientes WHERE ClienteID = @ClienteID;";
-                using (SqlCommand cmd = new SqlCommand(deleteQuery, connection))
-                {
-                    cmd.Parameters.AddWithValue("@ClienteID", txtId.Text);
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                    if (rowsAffected > 0)
-                    {
-                        MessageBox.Show("Cliente eliminado exitosamente.");
-                        // Limpiar el campo después de eliminar
-                        txtId.Text = "";
-                        // Recargar los datos en el DataGridView
-                        btnCargar_Click(sender, e);
-                    }
-                    else
-                    {
-                        MessageBox.Show("No se encontró un cliente con ese ClienteID.");
-                    }
-                }
+                MessageBox.Show("Por favor, ingrese un ID de cliente válido.");
+                return;
+            }
+            var cliente = _context.Clientes.Find(id);
+            if (cliente != null)
+            {
+                _context.Clientes.Remove(cliente);
+                _context.SaveChanges();
+                MessageBox.Show("Cliente eliminado exitosamente.");
+                // Limpiar el campo después de eliminar
+                txtId.Text = "";
+                // Recargar los datos en el DataGridView
+                btnCargar_Click(sender, e);
+            }
+            else
+            {
+                MessageBox.Show("No se encontró un cliente con ese ClienteID.");
             }
         }
 
         private void btnActualizar_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtId2.Text))
+            if (string.IsNullOrWhiteSpace(txtId2.Text) ||
+                string.IsNullOrWhiteSpace(txtNombre2.Text) ||
+                string.IsNullOrWhiteSpace(txtCorreo2.Text) ||
+                string.IsNullOrWhiteSpace(txtTelefono2.Text) ||
+                string.IsNullOrWhiteSpace(txtDireccion2.Text))
             {
-                MessageBox.Show("Por favor, ingrese el ClienteID a actualizar.");
+                MessageBox.Show("Por favor, complete todos los campos.");
                 return;
             }
-            if (string.IsNullOrWhiteSpace(txtNombre2.Text))
+
+            if (!int.TryParse(txtId2.Text, out int id))
             {
-                MessageBox.Show("Por favor, complete el Nombre.");
+                MessageBox.Show("Por favor, ingrese un ID de cliente válido.");
                 return;
             }
-            if (string.IsNullOrWhiteSpace(txtCorreo2.Text))
+            var cliente = _context.Clientes.Find(id);
+            if (cliente != null)
             {
-                MessageBox.Show("Por favor, complete el Correo.");
-                return;
+                cliente.Nombre = txtNombre2.Text;
+                cliente.Apellido = txtApellido2.Text;
+                cliente.Email = txtCorreo2.Text;
+                cliente.Telefono = txtTelefono2.Text;
+                cliente.Direccion = txtDireccion2.Text;
+                _context.SaveChanges();
+                MessageBox.Show("Cliente actualizado exitosamente.");
+                // Limpiar los campos después de actualizar
+                txtId2.Text = "";
+                txtNombre2.Text = "";
+                txtApellido2.Text = "";
+                txtCorreo2.Text = "";
+                txtTelefono2.Text = "";
+                txtDireccion2.Text = "";
+                // Recargar los datos en el DataGridView
+                btnCargar_Click(sender, e);
             }
-            if (string.IsNullOrWhiteSpace(txtTelefono2.Text))
+            else
             {
-                MessageBox.Show("Por favor, complete el Teléfono.");
-                return;
+                MessageBox.Show("No se encontró un cliente con ese ClienteID.");
             }
-            if (string.IsNullOrWhiteSpace(txtDireccion2.Text))
-            {
-                MessageBox.Show("Por favor, complete la Dirección.");
-                return;
-            }
-            using (SqlConnection connection = new SqlConnection(@"Data Source=DESKTOP-KC4QIBA;Initial Catalog=PracticaBD;Integrated Security=True;"))
-            {
-                connection.Open();
-                string updateQuery = "UPDATE Clientes SET NombreCompleto = @NombreCompleto, CorreoElectronico = @CorreoElectronico, " +
-                    "Telefono = @Telefono, Direccion = @Direccion WHERE ClienteID = @ClienteID;";
-                using (SqlCommand cmd = new SqlCommand(updateQuery, connection))
-                {
-                    cmd.Parameters.AddWithValue("@ClienteID", txtId2.Text);
-                    cmd.Parameters.AddWithValue("@NombreCompleto", txtNombre2.Text);
-                    cmd.Parameters.AddWithValue("@CorreoElectronico", txtCorreo2.Text);
-                    cmd.Parameters.AddWithValue("@Telefono", txtTelefono2.Text);
-                    cmd.Parameters.AddWithValue("@Direccion", txtDireccion2.Text);
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                    if (rowsAffected > 0)
-                    {
-                        MessageBox.Show("Cliente actualizado exitosamente.");
-                        // Limpiar los campos después de actualizar
-                        txtId.Text = "";
-                        txtNombre.Text = "";
-                        txtCorreo.Text = "";
-                        txtTelefono.Text = "";
-                        txtDireccion.Text = "";
-                        // Recargar los datos en el DataGridView
-                        btnCargar_Click(sender, e);
-                    }
-                    else
-                    {
-                        MessageBox.Show("No se encontró un cliente con ese ClienteID.");
-                    }
-                }
-            }
+        }
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            _context.Dispose();
+            base.OnFormClosed(e);
+        }
     }
 }
-}
-

@@ -1,3 +1,6 @@
+using System;
+using System.Windows.Forms;
+
 namespace ManipulacionDeDatosApp
 {
     internal static class Program
@@ -8,9 +11,10 @@ namespace ManipulacionDeDatosApp
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
+#pragma warning disable CA1416
+            Application.EnableVisualStyles();
+#pragma warning restore CA1416
+            Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
         }
     }

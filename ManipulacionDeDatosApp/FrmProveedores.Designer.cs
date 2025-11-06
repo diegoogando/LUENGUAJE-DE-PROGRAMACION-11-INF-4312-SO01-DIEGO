@@ -1,3 +1,6 @@
+using System.Windows.Forms;
+using System.Drawing;
+
 namespace ManipulacionDeDatosApp
 {
     partial class FrmProveedores
@@ -79,7 +82,7 @@ namespace ManipulacionDeDatosApp
             groupBox1.TabIndex = 3;
             groupBox1.TabStop = false;
             groupBox1.Text = "Insertar";
-            groupBox1.Enter += groupBox1_Enter;
+
             // 
             // label1
             // 
@@ -153,7 +156,7 @@ namespace ManipulacionDeDatosApp
             button2.TabIndex = 0;
             button2.Text = "Agregar";
             button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
+            button2.Click += btnGuardar_Click;
             // 
             // groupBox2
             // 
